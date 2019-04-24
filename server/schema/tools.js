@@ -1,18 +1,13 @@
 const { gql } = require("apollo-server");
 const fetchCbrain = require("../cbrain-api");
-const {
-  paginateResults,
-  sortResults,
-  snakeKey,
-  camelKey
-} = require("../utils");
+const { paginateResults, sortResults, camelKey } = require("../utils");
 
 const route = "tools";
 
 const typeDefs = gql`
   extend type Query {
     getTools(
-      cursor: Int 
+      cursor: Int
       limit: Int
       sortBy: ToolSort
       orderBy: Order

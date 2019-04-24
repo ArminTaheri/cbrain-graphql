@@ -1,14 +1,8 @@
 const { gql } = require("apollo-server");
-const FormData = require('form-data');
+const FormData = require("form-data");
 const fetchCbrain = require("../cbrain-api");
-const { urlencodeFormData } = require("../utils");
 
-const {
-  paginateResults,
-  sortResults,
-  snakeKey,
-  camelKey
-} = require("../utils");
+const { paginateResults, sortResults, camelKey } = require("../utils");
 
 const route = "userfiles";
 
@@ -16,7 +10,7 @@ const typeDefs = gql`
   extend type Query {
     getUserfileById(id: ID!): Userfile
     getUserfiles(
-      cursor: Int 
+      cursor: Int
       limit: Int
       sortBy: UserfileSort
       orderBy: Order
@@ -62,7 +56,7 @@ const typeDefs = gql`
     groupId: ID
     fileType: String
     extract: Boolean
-    extractMode: ExtractMode 
+    extractMode: ExtractMode
   }
 
   enum UserfileSort {
@@ -108,21 +102,21 @@ const resolvers = {
   },
   Mutation: {
     uploadUserfile: async (_, { input }, context) => {
-      const { filename, mimetype, createReadStream } = await input.uploadFile;
+      const { filename, createReadStream } = await input.uploadFile;
       const stream = createReadStream();
 
       const formData = new FormData();
-      formData.append('upload_file', stream, { filename });
-      formData.append('data_provider_id', input.dataProviderId);
-      formData.append('userfile[group_id]', input.groupId);
+      formData.append("upload_file", stream, { filename });
+      formData.append("data_provider_id", input.dataProviderId);
+      formData.append("userfile[group_id]", input.groupId);
       if (input.fileType) {
-        formData.append('file_type', input.fileType);
+        formData.append("file_type", input.fileType);
       }
       if (input.extract) {
-        formData.append('_do_extract', 'on');
+        formData.append("_do_extract", "on");
       }
       if (input.extractMode) {
-        formData.append('_up_ex_mode', input.extractMode);
+        formData.append("_up_ex_mode", input.extractMode);
       }
 
       return fetchCbrain(context, "userfiles", {
